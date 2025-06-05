@@ -4,9 +4,9 @@ This project is a Vite + React + TypeScript web application that allows users to
 
 ## Features
 
-- Search bar for entering a location
-- Results area to display busyness information (to be implemented)
-- Modern React component structure
+- **Search Bar:** Enter a location.
+- **Results Area:** Display busyness information (to be implemented).
+- **Clean Component Structure:** Modern React components with clear separation of UI and data-fetching logic.
 
 ## Getting Started
 
@@ -33,18 +33,20 @@ npm run build
 
 ---
 
-# React + TypeScript + Vite
+# React + TypeScript + Vite Template
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a minimal setup for React with Vite including HMR and ESLint rules.
 
-Currently, two official plugins are available:
+### Available Plugins
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **@vitejs/plugin-react:** Uses Babel for Fast Refresh.  
+  [Learn More](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react)
+- **@vitejs/plugin-react-swc:** Uses SWC for Fast Refresh.  
+  [Learn More](https://github.com/vitejs/vite-plugin-react-swc)
 
-## Expanding the ESLint configuration
+## Expanding the ESLint Configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+For production applications, consider enabling type-aware lint rules as shown below:
 
 ```js
 export default tseslint.config({
@@ -81,7 +83,7 @@ export default tseslint.config({
   },
   rules: {
     // other rules...
-    // Enable its recommended typescript rules
+    // Enable its recommended TypeScript rules
     ...reactX.configs["recommended-typescript"].rules,
     ...reactDom.configs.recommended.rules,
   },
@@ -92,37 +94,37 @@ export default tseslint.config({
 
 # Backend (FastAPI)
 
-The backend provides mock APIs for coffee shop occupancy and travel time estimates. It is built with FastAPI and serves data to the React frontend.
+The backend provides mock APIs for coffee shop occupancy and travel time estimates.
 
 ## 📦 API Endpoints
 
-- `GET /api/coffee_shops?lat=...&lon=...`  
+- **GET /api/coffee_shops?lat=...&lon=...**  
   Returns a list of nearby coffee shops with estimated busyness and round-trip time.
 
-- `GET /api/coffee_shops/{shop_id}`  
+- **GET /api/coffee_shops/{shop_id}**  
   Returns detailed info for a specific shop including address and ordering capability.
 
 ## 🛠️ Running the Backend
 
-1. Create and activate a virtual environment:
+1. **Create and activate a virtual environment:**
+
    ```bash
    python3 -m venv venv-coffee-finder
    source venv-coffee-finder/bin/activate
    ```
-2. Install dependencies:
 
-```bash
-pip install -r requirements.txt
-```
+2. **Install dependencies:**
 
-3. Start the FastAPI server:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```bash
-uvicorn main:app --reload --port 8000
-```
+3. **Start the FastAPI server:**
 
-4. Mock data consumption:
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
 
-```bash
-http://localhost:8000/api/coffee_shops?lat=12&lon=77
-```
+4. **Test the endpoint:**
+
+   Visit: <http://localhost:8000/api/coffee_shops?lat=12&lon=77>
