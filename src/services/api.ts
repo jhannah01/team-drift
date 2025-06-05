@@ -20,12 +20,13 @@ export interface Place {
   address: string;
   rating?: number;
   busyness?: {
-    current: number;
+    current: number | 'N/A';
     peak_hours: string[];
     trend: 'increasing' | 'decreasing' | 'stable';
   };
   coordinates?: Coordinates;
   distance?: number;
+  round_trip?: string; // e.g. "12 min" or "N/A"
 }
 
 export async function searchPlaces(params: SearchParams): Promise<Place[]> {
@@ -64,6 +65,7 @@ export async function searchPlaces(params: SearchParams): Promise<Place[]> {
         },
         coordinates: undefined, // backend does not provide coordinates
         distance: undefined, // backend does not provide distance
+        round_trip: shop.round_trip, // add round_trip from backend
       };
     });
   } catch (error) {

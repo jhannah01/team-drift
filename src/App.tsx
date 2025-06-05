@@ -13,12 +13,13 @@ interface Place {
   address: string;
   rating?: number;
   busyness?: {
-    current: number;
+    current: number | 'N/A';
     peak_hours: string[];
     trend: 'increasing' | 'decreasing' | 'stable';
   };
-  coordinates: Coordinates;
+  coordinates?: Coordinates;
   distance?: number;
+  round_trip?: string; // e.g. "12 min" or "N/A"
 }
 
 // Simple geolocation hook
@@ -78,6 +79,31 @@ import { searchPlaces } from './services/api';
 
 function App() {
   const [places, setPlaces] = useState<Place[]>([]);
+
+  // Compute the max round trip time in minutes for scaling the bar
+  const getMaxRoundTripMinutes = () => {
+    const times = places
+      .map((p) => {
+        if (!p.round_trip || p.round_trip === 'N/A') return null;
+        // Extract minutes from e.g. "12 min", "1 hour 5 mins"
+        const match = p.round_trip.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min[s]?|((\d+)\s*min[s]?)/i);
+        if (!match) return null;
+        if (match[1]) {
+          // e.g. "1 hour 5 mins"
+          const hours = parseInt(match[1], 10);
+          const mins = match[2] ? parseInt(match[2], 10) : 0;
+          return hours * 60 + mins;
+        } else if (match[4]) {
+          // e.g. "12 mins"
+          return parseInt(match[4], 10);
+        }
+        return null;
+      })
+      .filter((v): v is number => v !== null);
+    return times.length > 0 ? Math.max(...times) : 0;
+  };
+
+  const maxRoundTripMinutes = getMaxRoundTripMinutes();
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [query, setQuery] = useState('');
@@ -258,6 +284,39 @@ function App() {
                             </div>
                           </>
                         )}
+                        {/* --- Round Trip Visualization --- */}
+                        <div className="mt-6">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-700 text-sm">
+                              {place.round_trip && place.round_trip !== 'N/A' ? 'Round-trip drive' : 'Drive time unavailable'}
+                            </span>
+                            <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+                              {place.round_trip && place.round_trip !== 'N/A' ? place.round_trip : 'N/A'}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="h-2 rounded-full transition-all bg-blue-500"
+                              style={{
+                                width: (() => {
+                                  if (!place.round_trip || place.round_trip === 'N/A' || !maxRoundTripMinutes) return '0%';
+                                  // Extract minutes from e.g. "12 min", "1 hour 5 mins"
+                                  const match = place.round_trip.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min[s]?|((\d+)\s*min[s]?)/i);
+                                  let mins = 0;
+                                  if (!match) return '0%';
+                                  if (match[1]) {
+                                    mins = parseInt(match[1], 10) * 60 + (match[2] ? parseInt(match[2], 10) : 0);
+                                  } else if (match[4]) {
+                                    mins = parseInt(match[4], 10);
+                                  }
+                                  const percent = Math.max(5, Math.round((mins / maxRoundTripMinutes) * 100));
+                                  return `${percent}%`;
+                                })(),
+                              }}
+                            />
+                          </div>
+                        </div>
+                        {/* --- End Round Trip Visualization --- */}
                       </div>
                     )}
                   </div>
