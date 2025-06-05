@@ -118,7 +118,7 @@ function App() {
       <div className="container py-8">
         <header className="text-center mb-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            📍 Location Busyness Finder
+            📍 VibeCheck
           </h1>
           <p className="text-gray-600 text-lg">
             Find nearby places and see how busy they are right now
