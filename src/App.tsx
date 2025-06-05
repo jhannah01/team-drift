@@ -296,7 +296,7 @@ function App() {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="h-2 rounded-full transition-all bg-blue-500"
+                              className="h-2 rounded-full transition-all bg-blue-600"
                               style={{
                                 width: (() => {
                                   if (!place.round_trip || place.round_trip === 'N/A' || !maxRoundTripMinutes) return '0%';
@@ -308,6 +308,9 @@ function App() {
                                     mins = parseInt(match[1], 10) * 60 + (match[2] ? parseInt(match[2], 10) : 0);
                                   } else if (match[4]) {
                                     mins = parseInt(match[4], 10);
+                                  }
+                                  if (mins === maxRoundTripMinutes) {
+                                    return '100%';
                                   }
                                   const percent = Math.max(5, Math.round((mins / maxRoundTripMinutes) * 100));
                                   return `${percent}%`;
