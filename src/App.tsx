@@ -15,7 +15,7 @@ interface Place {
   busyness?: {
     current: number | 'N/A';
     peak_hours: string[];
-    trend?: 'increasing' | 'decreasing';
+    trend: 'increasing' | 'decreasing' | 'stable';
   };
   coordinates?: Coordinates;
   distance?: number;
@@ -248,10 +248,17 @@ function App() {
 
                     {place.busyness && (
                       <div className="border-t pt-4">
-                        <div className="flex items-center mb-3">
-                          <span className="flex items-center gap-2">
-                            👥 <span className="font-medium text-gray-900">Current Busyness</span>
-                          </span>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <span>👥</span>
+                            <span className="font-medium text-gray-900">Current Busyness</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span>{place.busyness.trend === 'increasing' ? '📈' : place.busyness.trend === 'decreasing' ? '📉' : '➖'}</span>
+                            <span className="text-sm text-gray-600 capitalize">
+                              {place.busyness.trend}
+                            </span>
+                          </div>
                         </div>
 
                         {place.busyness.current === 'N/A' ? (
