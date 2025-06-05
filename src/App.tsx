@@ -88,6 +88,32 @@ function App() {
   };
   const [places, setPlaces] = useState<Place[]>([]);
 
+  // Helper to extract minutes from a round_trip string
+  const getDriveMinutes = (round_trip?: string) => {
+    if (!round_trip || round_trip === 'N/A') return Infinity;
+    const match = round_trip.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min[s]?|((\d+)\s*min[s]?)/i);
+    if (!match) return Infinity;
+    if (match[1]) {
+      // e.g. "1 hour 5 mins"
+      const hours = parseInt(match[1], 10);
+      const mins = match[2] ? parseInt(match[2], 10) : 0;
+      return hours * 60 + mins;
+    } else if (match[4]) {
+      // e.g. "12 mins"
+      return parseInt(match[4], 10);
+    }
+    return Infinity;
+  };
+
+  // Sort places by busyness (least to greatest), N/A at end sorted by drive time
+  const sortedPlaces = React.useMemo(() => {
+    const withBusyness = places.filter(p => p.busyness && p.busyness.current !== 'N/A');
+    const noBusyness = places.filter(p => !p.busyness || p.busyness.current === 'N/A');
+    withBusyness.sort((a, b) => (a.busyness!.current as number) - (b.busyness!.current as number));
+    noBusyness.sort((a, b) => getDriveMinutes(a.round_trip) - getDriveMinutes(b.round_trip));
+    return [...withBusyness, ...noBusyness];
+  }, [places]);
+
   // Compute the max round trip time in minutes for scaling the bar
   const getMaxRoundTripMinutes = () => {
     const times = places
@@ -223,7 +249,7 @@ function App() {
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {places.map((place) => (
+                {sortedPlaces.map((place) => (
                   <div key={place.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="text-lg font-semibold text-gray-900 flex-1">{place.name}</h3>
