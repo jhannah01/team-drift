@@ -1,4 +1,3 @@
-
 import os
 from typing import List
 import httpx
@@ -30,13 +29,13 @@ async def get_travel_time(lat: float, lon: float, dest_lat: float, dest_lon: flo
         except Exception:
             return "N/A"
 
-async def get_nearby_shops(lat: float, lon: float) -> List[ShopSummary]:
+async def get_nearby_shops(lat: float, lon: float, shop_type: str) -> List[ShopSummary]:
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
     params = {
         "location": f"{lat},{lon}",
         "radius": 8046,  # 5 miles
-        "type": "cafe",
-        "keyword": "coffee",
+        "type": shop_type,
+        "keyword": shop_type,
         "opennow": "true",
         "key": GOOGLE_MAPS_API_KEY
     }
