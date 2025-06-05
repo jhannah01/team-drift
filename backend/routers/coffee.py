@@ -10,9 +10,9 @@ router = APIRouter()
 async def list_shops(
     lat: float = Query(37.39325571666153),
     lon: float = Query(-122.04601320750524),
-    shop_type: str = Query("coffee")
+    query: str = Query("coffee", description="Type of shop to search for (e.g., 'nail salon', 'restaurant', 'coffee')")
 ) -> List[ShopSummary]:
-    return await get_nearby_shops(lat, lon, shop_type)
+    return await get_nearby_shops(lat, lon, query)
 
 @router.post("/shops/{shop_id}/order")
 def order_ahead(shop_id: str):

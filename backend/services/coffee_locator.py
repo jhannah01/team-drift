@@ -29,13 +29,17 @@ async def get_travel_time(lat: float, lon: float, dest_lat: float, dest_lon: flo
         except Exception:
             return "N/A"
 
-async def get_nearby_shops(lat: float, lon: float, shop_type: str) -> List[ShopSummary]:
+async def get_nearby_shops(lat: float, lon: float, search_query: str) -> List[ShopSummary]:
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    
+    # Use the search query as both the keyword and determine the place type
+    # For Google Places API, we'll use 'establishment' as a general type
+    # and rely on the keyword to filter results
     params = {
         "location": f"{lat},{lon}",
         "radius": 8046,  # 5 miles
-        "type": shop_type,
-        "keyword": shop_type,
+        "keyword": search_query,
+        "type": "establishment",  # General type that covers most businesses
         "opennow": "true",
         "key": GOOGLE_MAPS_API_KEY
     }

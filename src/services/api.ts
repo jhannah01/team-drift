@@ -31,8 +31,8 @@ export interface Place {
 
 export async function searchPlaces(params: SearchParams): Promise<Place[]> {
   try {
-    // Call the backend API for real data
-    const response = await fetch(`${API_BASE_URL}/coffee_shops?lat=${params.location.lat}&lon=${params.location.lng}`);
+    // Call the backend API with the search query
+    const response = await fetch(`${API_BASE_URL}/shops?lat=${params.location.lat}&lon=${params.location.lng}&query=${encodeURIComponent(params.query)}`);
     if (!response.ok) {
       throw new Error('Failed to fetch places from backend');
     }
