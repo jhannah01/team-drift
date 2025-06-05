@@ -78,6 +78,14 @@ const useGeolocation = () => {
 import { searchPlaces } from './services/api';
 
 function App() {
+  // Helper to get color for drive time bar
+  const getDriveTimeColor = (mins: number) => {
+    if (!maxRoundTripMinutes) return 'bg-gray-400';
+    const percent = (mins / maxRoundTripMinutes) * 100;
+    if (percent < 33) return 'bg-green-500';
+    if (percent < 67) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
   const [places, setPlaces] = useState<Place[]>([]);
 
   // Compute the max round trip time in minutes for scaling the bar
@@ -296,7 +304,19 @@ function App() {
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="h-2 rounded-full transition-all bg-blue-600"
+                              className={(() => {
+                                if (!place.round_trip || place.round_trip === 'N/A' || !maxRoundTripMinutes) return 'h-2 rounded-full transition-all bg-gray-400';
+                                // Extract minutes from e.g. "12 min", "1 hour 5 mins"
+                                const match = place.round_trip.match(/(\d+)\s*hour[s]?\s*(\d+)?\s*min[s]?|((\d+)\s*min[s]?)/i);
+                                let mins = 0;
+                                if (!match) return 'h-2 rounded-full transition-all bg-gray-400';
+                                if (match[1]) {
+                                  mins = parseInt(match[1], 10) * 60 + (match[2] ? parseInt(match[2], 10) : 0);
+                                } else if (match[4]) {
+                                  mins = parseInt(match[4], 10);
+                                }
+                                return `h-2 rounded-full transition-all ${getDriveTimeColor(mins)}`;
+                              })()}
                               style={{
                                 width: (() => {
                                   if (!place.round_trip || place.round_trip === 'N/A' || !maxRoundTripMinutes) return '0%';
