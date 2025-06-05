@@ -98,11 +98,9 @@ The backend provides mock APIs for coffee shop occupancy and travel time estimat
 
 ## 📦 API Endpoints
 
-- `GET /api/coffee_shops?lat=...&lon=...`  
-  Returns a list of nearby coffee shops with estimated busyness and round-trip time.
-
-- `GET /api/coffee_shops/{shop_id}`  
-  Returns detailed info for a specific shop including address and ordering capability.
+- `GET /api/coffee_shops`  
+  Returns a list of open coffee shops near Sunnyvale by default.  
+  Optionally accepts `?lat=<>&lon=<>` to search near a specific location.
 
 - `POST /api/coffee_shops/{shop_id}/order`  
   Places a mock "order ahead" at the given coffee shop.
@@ -130,8 +128,3 @@ The backend provides mock APIs for coffee shop occupancy and travel time estimat
    ```bash
    uvicorn main:app --reload --port 8000
    ```
-
-4. **Test the endpoint:**
-
-   Visit: <http://localhost:8000/api/coffee_shops?lat=12&lon=77>
-   (currenly serves real Sunnyvale coffee shop lat longs)
