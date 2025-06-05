@@ -1,8 +1,9 @@
 # Location Busyness Web App
 
-This project is a Vite + React + TypeScript web application that allows users to search for a location and view how busy that location is. 
+This project is a Vite + React + TypeScript web application that allows users to search for a location and view how busy that location is.
 
 ## Features
+
 - Search bar for entering a location
 - Results area to display busyness information (to be implemented)
 - Modern React component structure
@@ -10,6 +11,7 @@ This project is a Vite + React + TypeScript web application that allows users to
 ## Getting Started
 
 ### Development
+
 To start the development server:
 
 ```bash
@@ -17,6 +19,7 @@ npm run dev
 ```
 
 ### Build
+
 To build the project for production:
 
 ```bash
@@ -24,6 +27,7 @@ npm run build
 ```
 
 ## Customization
+
 - Replace the placeholder logic for fetching busyness data with your preferred API (e.g., Google Places, Foursquare).
 - Update UI components as needed.
 
@@ -55,31 +59,70 @@ export default tseslint.config({
   languageOptions: {
     // other options...
     parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
       tsconfigRootDir: import.meta.dirname,
     },
   },
-})
+});
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from "eslint-plugin-react-x";
+import reactDom from "eslint-plugin-react-dom";
 
 export default tseslint.config({
   plugins: {
     // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
+    "react-x": reactX,
+    "react-dom": reactDom,
   },
   rules: {
     // other rules...
     // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
+    ...reactX.configs["recommended-typescript"].rules,
     ...reactDom.configs.recommended.rules,
   },
-})
+});
+```
+
+---
+
+# Backend (FastAPI)
+
+The backend provides mock APIs for coffee shop occupancy and travel time estimates. It is built with FastAPI and serves data to the React frontend.
+
+## 📦 API Endpoints
+
+- `GET /api/coffee_shops?lat=...&lon=...`  
+  Returns a list of nearby coffee shops with estimated busyness and round-trip time.
+
+- `GET /api/coffee_shops/{shop_id}`  
+  Returns detailed info for a specific shop including address and ordering capability.
+
+## 🛠️ Running the Backend
+
+1. Create and activate a virtual environment:
+   ```bash
+   python3 -m venv venv-coffee-finder
+   source venv-coffee-finder/bin/activate
+   ```
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Start the FastAPI server:
+
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+4. Mock data consumption:
+
+```bash
+http://localhost:8000/api/coffee_shops?lat=12&lon=77
 ```
