@@ -1,5 +1,3 @@
-
-
 // Use the backend endpoint for real data
 const API_BASE_URL = '/api';
 
@@ -22,7 +20,7 @@ export interface Place {
   busyness?: {
     current: number | 'N/A';
     peak_hours: string[];
-    trend: 'increasing' | 'decreasing' | 'stable';
+    trend?: 'increasing' | 'decreasing';
   };
   coordinates?: Coordinates;
   distance?: number;
@@ -31,8 +29,8 @@ export interface Place {
 
 export async function searchPlaces(params: SearchParams): Promise<Place[]> {
   try {
-    // Call the backend API with the search query
-    const response = await fetch(`${API_BASE_URL}/shops?lat=${params.location.lat}&lon=${params.location.lng}&query=${encodeURIComponent(params.query)}`);
+    // Call the backend API for real data, passing shop_type from the query
+    const response = await fetch(`${API_BASE_URL}/shops?lat=${params.location.lat}&lon=${params.location.lng}&shop_type=${encodeURIComponent(params.query)}`);
     if (!response.ok) {
       throw new Error('Failed to fetch places from backend');
     }
@@ -61,7 +59,7 @@ export async function searchPlaces(params: SearchParams): Promise<Place[]> {
         busyness: {
           current: busynessCurrent,
           peak_hours: [], // backend does not provide peak hours
-          trend: 'stable', // backend does not provide trend
+          // trend removed: backend does not provide trend
         },
         coordinates: undefined, // backend does not provide coordinates
         distance: undefined, // backend does not provide distance
