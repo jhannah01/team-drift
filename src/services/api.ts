@@ -22,7 +22,7 @@ export interface Place {
   busyness?: {
     current: number | 'N/A';
     peak_hours: string[];
-    trend: 'increasing' | 'decreasing' | 'stable';
+    trend?: 'increasing' | 'decreasing';
   };
   coordinates?: Coordinates;
   distance?: number;
@@ -61,7 +61,7 @@ export async function searchPlaces(params: SearchParams): Promise<Place[]> {
         busyness: {
           current: busynessCurrent,
           peak_hours: [], // backend does not provide peak hours
-          trend: 'stable', // backend does not provide trend
+          // trend removed: backend does not provide trend
         },
         coordinates: undefined, // backend does not provide coordinates
         distance: undefined, // backend does not provide distance
