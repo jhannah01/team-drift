@@ -1,6 +1,9 @@
 from typing import List, Union
 from backend.models.shop import ShopSummary, ShopDetail
 
+# Simulated in-memory state
+_last_ordered = {"shop_id": None}
+
 def get_nearby_shops(lat: float, lon: float) -> List[ShopSummary]:
     return [
         ShopSummary(id="verve", name="Verve Coffee Roasters", busyness="10%", round_trip="8 mins"),
@@ -15,3 +18,10 @@ def get_shop_details(shop_id: str) -> Union[ShopDetail, dict]:
         "peets": ShopDetail(name="Peet’s Coffee", address="609 S Mathilda Ave, Sunnyvale, CA", can_order=False),
     }
     return details.get(shop_id, {"error": "Shop not found"})
+
+def place_order(shop_id: str) -> dict:
+    _last_ordered["shop_id"] = shop_id
+    return {"message": f"Order placed successfully at {shop_id}"}
+
+def get_last_order() -> dict:
+    return {"last_ordered_shop_id": _last_ordered["shop_id"]}

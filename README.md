@@ -98,11 +98,17 @@ The backend provides mock APIs for coffee shop occupancy and travel time estimat
 
 ## 📦 API Endpoints
 
-- **GET /api/coffee_shops?lat=...&lon=...**  
+- `GET /api/coffee_shops?lat=...&lon=...`  
   Returns a list of nearby coffee shops with estimated busyness and round-trip time.
 
-- **GET /api/coffee_shops/{shop_id}**  
+- `GET /api/coffee_shops/{shop_id}`  
   Returns detailed info for a specific shop including address and ordering capability.
+
+- `POST /api/coffee_shops/{shop_id}/order`  
+  Places a mock "order ahead" at the given coffee shop.
+
+- `GET /api/coffee_shops/last_order`  
+  Returns the shop ID of the last order placed.
 
 ## 🛠️ Running the Backend
 
@@ -128,3 +134,4 @@ The backend provides mock APIs for coffee shop occupancy and travel time estimat
 4. **Test the endpoint:**
 
    Visit: <http://localhost:8000/api/coffee_shops?lat=12&lon=77>
+   (currenly serves real Sunnyvale coffee shop lat longs)
