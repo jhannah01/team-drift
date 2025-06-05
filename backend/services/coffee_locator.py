@@ -1,12 +1,15 @@
 import os
 from typing import List
 import httpx
+from dotenv import load_dotenv
 from backend.models.shop import ShopSummary
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 
 GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 if not GOOGLE_MAPS_API_KEY:
-    GOOGLE_MAPS_API_KEY = "AIzaSyBzTtJwuS3xNQ27uy6U7HSlbrP7rEgocjY"
-    # raise RuntimeError("Missing GOOGLE_MAPS_API_KEY environment variable")
+    raise RuntimeError("Missing GOOGLE_MAPS_API_KEY environment variable. Please set it in your environment or .env file.")
 
 async def get_travel_time(lat: float, lon: float, dest_lat: float, dest_lon: float) -> str:
     url = "https://maps.googleapis.com/maps/api/distancematrix/json"

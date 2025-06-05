@@ -94,18 +94,46 @@ export default tseslint.config({
 
 # Backend (FastAPI)
 
-The backend provides mock APIs for coffee shop occupancy and travel time estimates.
+The backend provides APIs for finding nearby coffee shops with busyness estimates and travel times. It uses the Google Places API and Google Distance Matrix API to fetch real-time data.
+
+## 🔑 Environment Setup
+
+The backend requires a Google Maps API key to function. You'll need to:
+
+1. **Get a Google Maps API Key:**
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select an existing one
+   - Enable the following APIs:
+     - Places API
+     - Distance Matrix API
+   - Create credentials (API Key)
+
+2. **Create a `.env` file in the project root:**
+
+   ```bash
+   # Create .env file in the root directory
+   touch .env
+   ```
+
+3. **Add your API key to the `.env` file:**
+
+   ```properties
+   GOOGLE_MAPS_API_KEY=your_actual_api_key_here
+   ```
+
+   **⚠️ Important:** Never commit your actual API key to version control. The `.env` file is already added to `.gitignore`.
 
 ## 📦 API Endpoints
 
-- `GET /api/coffee_shops`  
-  Returns a list of open coffee shops near Sunnyvale by default.  
-  Optionally accepts `?lat=<>&lon=<>` to search near a specific location.
+- **GET /api/coffee_shops?lat={lat}&lon={lon}**  
+  Returns a list of nearby coffee shops with busyness estimates and travel times.
+  - `lat` (optional): Latitude for search location (defaults to Sunnyvale)
+  - `lon` (optional): Longitude for search location (defaults to Sunnyvale)
 
-- `POST /api/coffee_shops/{shop_id}/order`  
+- **POST /api/coffee_shops/{shop_id}/order**  
   Places a mock "order ahead" at the given coffee shop.
 
-- `GET /api/coffee_shops/last_order`  
+- **GET /api/coffee_shops/last_order**  
   Returns the shop ID of the last order placed.
 
 ## 🛠️ Running the Backend
@@ -123,8 +151,16 @@ The backend provides mock APIs for coffee shop occupancy and travel time estimat
    pip install -r requirements.txt
    ```
 
-3. **Start the FastAPI server:**
+3. **Set up environment variables:**
+
+   Make sure you have created a `.env` file with your Google Maps API key (see Environment Setup above).
+
+4. **Start the FastAPI server:**
 
    ```bash
    uvicorn main:app --reload --port 8000
    ```
+
+5. **Test the API:**
+
+   Visit: http://localhost:8000/docs for the interactive API documentation.
