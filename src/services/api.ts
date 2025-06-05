@@ -1,5 +1,3 @@
-
-
 // Use the backend endpoint for real data
 const API_BASE_URL = '/api';
 
@@ -57,7 +55,7 @@ export async function searchPlaces(params: SearchParams): Promise<Place[]> {
         id: shop.id,
         name: shop.name,
         address: shop.address,
-        rating: undefined, // backend does not provide rating
+        rating: shop.rating, // pass rating from backend
         busyness: {
           current: busynessCurrent,
           peak_hours: [], // backend does not provide peak hours

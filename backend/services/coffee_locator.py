@@ -70,6 +70,7 @@ async def get_nearby_shops(lat: float, lon: float, search_query: str) -> List[Sh
     for i, (place, travel_time, busyness) in enumerate(zip(places, travel_times, busyness_results)):
         name = place["name"]
         address = place.get("vicinity", "Unknown address")
+        rating = place.get("rating")
         if isinstance(busyness, Exception) or busyness is None:
             busyness_str = "N/A"
         else:
@@ -78,6 +79,7 @@ async def get_nearby_shops(lat: float, lon: float, search_query: str) -> List[Sh
             id=f"place_{i}",
             name=name,
             address=address,
+            rating=rating,
             busyness=busyness_str,
             round_trip=travel_time,
             can_order=True

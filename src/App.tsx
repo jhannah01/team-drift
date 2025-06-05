@@ -337,13 +337,19 @@ function App() {
                 {sortedPlaces.map((place) => (
                   <div key={place.id} className="bg-white rounded-xl shadow-sm hover:shadow-md border hover:border-blue-200 p-6 transition-all">
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-lg font-semibold text-gray-900 flex-1 leading-tight">{place.name}</h3>
-                      {place.rating && (
-                        <div className="flex items-center gap-1 text-sm bg-yellow-50 px-2 py-1 rounded-full">
-                          <span>⭐</span>
-                          <span className="text-gray-700 font-medium">{place.rating}</span>
+                      <div className="flex flex-col flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900 leading-tight">{place.name}</h3>
+                        <div className="mt-1">
+                          {place.rating !== undefined && place.rating !== null ? (
+                            <span className="inline-flex items-center gap-1 text-sm font-semibold text-yellow-600 mt-1" title="Google Maps rating">
+                              <span>⭐</span>
+                              <span>{place.rating.toFixed(1)}</span>
+                            </span>
+                          ) : (
+                            <span className="text-sm text-gray-400 mt-1">No rating</span>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
 
                     <div className="flex items-start gap-2 text-sm text-gray-600 mb-4">
