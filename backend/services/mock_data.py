@@ -1,4 +1,3 @@
-# Simulated data logic – replace later with real APIs
 
 def get_nearby_shops(lat: float, lon: float):
     # Simulated response (mocked occupancy + travel time)

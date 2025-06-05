@@ -72,29 +72,9 @@ const useGeolocation = () => {
   return state;
 };
 
-// Mock API function
-const searchPlaces = async (query: string, location: Coordinates): Promise<Place[]> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  const mockPlaces: Place[] = Array.from({ length: 5 }, (_, index) => ({
-    id: `place-${index}`,
-    name: `${query} Place ${index + 1}`,
-    address: `${123 + index} Main St, City, State`,
-    rating: Math.round((3 + Math.random() * 2) * 10) / 10,
-    busyness: {
-      current: Math.floor(Math.random() * 100),
-      peak_hours: ['12:00 PM - 2:00 PM', '6:00 PM - 8:00 PM'],
-      trend: ['increasing', 'decreasing', 'stable'][Math.floor(Math.random() * 3)] as any,
-    },
-    coordinates: {
-      lat: location.lat + (Math.random() - 0.5) * 0.02,
-      lng: location.lng + (Math.random() - 0.5) * 0.02,
-    },
-    distance: Math.round(Math.random() * 10 * 100) / 100,
-  }));
 
-  return mockPlaces;
-};
+// Use the real API function
+import { searchPlaces } from './services/api';
 
 function App() {
   const [places, setPlaces] = useState<Place[]>([]);
@@ -111,7 +91,7 @@ function App() {
     setSearchQuery(query.trim());
 
     try {
-      const results = await searchPlaces(query.trim(), coordinates);
+      const results = await searchPlaces({ query: query.trim(), location: coordinates });
       setPlaces(results);
     } catch (error) {
       console.error('Search failed:', error);
@@ -247,31 +227,37 @@ function App() {
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between mb-3">
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getBusynessColor(place.busyness.current)}`}>
-                            {getBusynessText(place.busyness.current)}
-                          </span>
-                          <span className="text-lg font-bold text-gray-900">
-                            {place.busyness.current}%
-                          </span>
-                        </div>
+                        {place.busyness.current === 'N/A' ? (
+                          <span className="text-gray-400 text-sm font-medium">Data unavailable</span>
+                        ) : (
+                          <>
+                            <div className="flex items-center justify-between mb-3">
+                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getBusynessColor(place.busyness.current as number)}`}>
+                                {getBusynessText(place.busyness.current as number)}
+                              </span>
+                              <span className="text-lg font-bold text-gray-900">
+                                {place.busyness.current}%
+                              </span>
+                            </div>
 
-                        <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-                          <div
-                            className={`h-2 rounded-full transition-all ${
-                              place.busyness.current < 30 ? 'bg-green-500' :
-                              place.busyness.current < 70 ? 'bg-yellow-500' : 'bg-red-500'
-                            }`}
-                            style={{ width: `${place.busyness.current}%` }}
-                          />
-                        </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                              <div
+                                className={`h-2 rounded-full transition-all ${
+                                  (place.busyness.current as number) < 30 ? 'bg-green-500' :
+                                  (place.busyness.current as number) < 70 ? 'bg-yellow-500' : 'bg-red-500'
+                                }`}
+                                style={{ width: `${place.busyness.current}%` }}
+                              />
+                            </div>
 
-                        <div className="text-sm text-gray-600">
-                          <span className="font-medium">Peak hours:</span>
-                          <div className="mt-1">
-                            {place.busyness.peak_hours.join(', ')}
-                          </div>
-                        </div>
+                            <div className="text-sm text-gray-600">
+                              <span className="font-medium">Peak hours:</span>
+                              <div className="mt-1">
+                                {place.busyness.peak_hours.join(', ')}
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
